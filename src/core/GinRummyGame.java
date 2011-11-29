@@ -36,9 +36,12 @@ public class GinRummyGame {
 		}
 	}
 	
-	public void printTopDiscardCard() {
-		System.out.println("The top card on the discard pile is: "+discardPile.peek().toString());
-		System.out.println();
+	public void playMove(int clickedCard, int clickedStack) {
+		discardPile.push(clickedStack==0?currentPlayer.hand.set(clickedCard, discardPile.pop()):(currentPlayer.hand.set(clickedCard, cardDeck.drawTopCard())));
+	}
+	
+	public void setCurentPlayerAsNext() {
+		//try {Thread.sleep(1000);} catch (InterruptedException e){}
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -62,9 +65,5 @@ public class GinRummyGame {
 	 */
 	public int getMaxHandSize() {
 		return 7;
-	}
-
-	public int getNumOfDecks() {
-		return 1;
 	}
 }

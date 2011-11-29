@@ -1,19 +1,20 @@
 package gui;
 
 import gui.SpriteMap.SpriteType;
-
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
+
+import javax.swing.JOptionPane;
 
 import core.*;
 
-public class GameCanvas extends Canvas implements MouseListener{
+public class GameCanvas extends Canvas implements MouseListener {
 	private static final long serialVersionUID = 1L;
 
 	private int playerTurn=0;
 	private SpriteMap spriteMap;
 	private GinRummyGame theGame;
+	private boolean hideCards = false;
 	private int clickedCard=-1, clickedStack=-1;
 	private Font playerFont = new Font("Book Antiqua", Font.BOLD, 18);
 	private Color cardShader = new Color(255,238,0,127);
@@ -35,12 +36,17 @@ public class GameCanvas extends Canvas implements MouseListener{
 
 	private void drawCards(Graphics2D gfx2D) {
 		for (int i=0;i<7;i++) {
-			gfx2D.setColor(i==clickedCard?Color.YELLOW:Color.WHITE);
-			gfx2D.fillRect((i*50)+50, 290, 40, 60);
-			gfx2D.setColor(Color.DARK_GRAY);
-			gfx2D.drawRect((i*50)+51, 291, 37, 57);
-			gfx2D.setColor((theGame.currentPlayer.hand.get(i).isRed()&&theGame.currentPlayer instanceof HumanPlayer)?Color.RED:Color.BLACK);
-			gfx2D.drawString (theGame.currentPlayer.hand.get(i).toString(), (i*50)+59, 316);
+			if(hideCards) {
+				gfx2D.setColor(Color.DARK_GRAY);
+				gfx2D.fillRect((i*50)+50, 290, 40, 60);
+			} else {
+				gfx2D.setColor(i==clickedCard?Color.YELLOW:Color.WHITE);
+				gfx2D.fillRect((i*50)+50, 290, 40, 60);
+				gfx2D.setColor(Color.DARK_GRAY);
+				gfx2D.drawRect((i*50)+51, 291, 37, 57);
+				gfx2D.setColor((theGame.currentPlayer.hand.get(i).isRed())?Color.RED:Color.BLACK);
+				gfx2D.drawString (theGame.currentPlayer.hand.get(i).toString(), (i*50)+59, 316);
+			}
 			gfx2D.drawImage(spriteMap.getSprite(SpriteType.CARDBACK), null, (i*30)+122, 20);
 			gfx2D.drawImage(spriteMap.getSprite(SpriteType.CARDBACKROT), null, 20-20, (i*30)+60);
 			gfx2D.drawImage(spriteMap.getSprite(SpriteType.CARDBACKROT), null, 392-20, (i*30)+60);
@@ -61,14 +67,18 @@ public class GameCanvas extends Canvas implements MouseListener{
 		gfx2D.setColor(Color.BLUE);
 		gfx2D.setFont(playerFont);
 		gfx2D.drawString ("Player "+(theGame.currentPlayer.playerID+1), 190, 280);
+		if(hideCards&&!(theGame.currentPlayer instanceof ComputerPlayer))
+			gfx2D.drawString ("Click to begin turn", 140, 260);
 	}
-
-	@Override
-	public void mouseClicked(MouseEvent parammouseEvent) {}
 
 	//I use mousePressed instead of mouseClicked because mouseClicked ignores accidental drags.
 	@Override
 	public void mousePressed(MouseEvent mouseEvent) {
+		if(hideCards&&!(theGame.currentPlayer instanceof ComputerPlayer)) {
+			hideCards=false;
+			repaint();
+			return;
+		}
 		int posX=mouseEvent.getX(), posY=mouseEvent.getY();
 		if(posX>150&&posX<200&&posY>130&&posY<205){
 			clickedStack=0;
@@ -85,9 +95,16 @@ public class GameCanvas extends Canvas implements MouseListener{
 				}
 			}
 		if (clickedCard>=0&&clickedStack>=0) {
-			
+			theGame.playMove(clickedCard, clickedStack);
+			repaint();
+			hideCards=true;
+			theGame.setCurentPlayerAsNext();
+			repaint();
 		}
 	}
+	
+	@Override
+	public void mouseClicked(MouseEvent parammouseEvent) {}
 
 	@Override
 	public void mouseReleased(MouseEvent paramMouseEvent) {}

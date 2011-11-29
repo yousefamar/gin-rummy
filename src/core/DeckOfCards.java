@@ -13,7 +13,7 @@ public class DeckOfCards {
 	 */
 	public DeckOfCards(GinRummyGame game){
 		this.theGame = game;
-		for (int i=0;i<game.getNumOfDecks()*52;i++)
+		for (int i=0;i<52;i++)
 			deck.add(new Card(i));
 	}
 	
