@@ -17,6 +17,22 @@ public class Card {
 		this.index = index;
 	}
 	
+	public int getValue() {
+		int numVal = index;
+		while(numVal>12)
+			numVal-=13;
+		return numVal;
+	}
+	
+	public int getSuit() {
+		int numVal = index, suitVal = 0;
+		while(numVal>12) {
+			numVal-=13;
+			suitVal++;
+		}
+		return suitVal;
+	}
+	
 	public boolean isRed() {
 		return ((index>12&&index<26)||(index>38&&index<52));
 	}
@@ -50,16 +66,16 @@ public class Card {
 		
 		switch (suitVal) {
 		case 0:
-			suit = "♠";
+			suit = "\u2660";
 			break;
 		case 1:
-			suit = "♥";
+			suit = "\u2665";
 			break;
 		case 2:
-			suit = "♣";
+			suit = "\u2663";
 			break;
 		case 3:
-			suit = "♦";
+			suit = "\u2666";
 			break;
 		default:
 			suit = "Jk";

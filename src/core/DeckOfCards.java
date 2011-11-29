@@ -4,8 +4,8 @@ import java.util.*;
 public class DeckOfCards {
 	
 	private Random rand = new Random();
-	private LinkedList<Card> deck = new LinkedList<Card>();
 	private GinRummyGame theGame;
+	public LinkedList<Card> deck = new LinkedList<Card>();
 	
 	/**
 	 * The default suit order is Spades, Hearts, Clubs, Diamonds. 
@@ -17,10 +17,6 @@ public class DeckOfCards {
 			deck.add(new Card(i));
 	}
 	
-	public void setDeck(LinkedList<Card> deck) {
-		this.deck = deck;
-	}
-
 	public void cut() {
 		int cutLoc = rand.nextInt(deck.size());
 		LinkedList<Card> tempDeck = new LinkedList<Card>();
@@ -48,21 +44,11 @@ public class DeckOfCards {
 	}
 	
 	public void deal() {
-		if(theGame.getMaxHandSize()*theGame.getNumOfPlayers()>deck.size() || theGame.getMaxHandSize() == -1) {
-			int i=0;
-			for (Card card:deck) {
-				theGame.players.get(i).addCardToHand(card);
-				i++;
-				i=i>=theGame.players.size()?0:i;
-			}
-			deck.clear();
-		} else {
-			int playerNum=0;
-			for (int i=0;i<(theGame.getMaxHandSize()*theGame.getNumOfPlayers());i++) {
-				theGame.players.get(playerNum).addCardToHand(drawTopCard());
-				playerNum++;
-				playerNum=playerNum>=theGame.players.size()?0:playerNum;
-			}
+		int playerNum=0;
+		for (int i=0;i<7*theGame.getNumOfPlayers();i++) {
+			theGame.players.get(playerNum).addCardToHand(drawTopCard());
+			playerNum++;
+			playerNum=playerNum>=theGame.players.size()?0:playerNum;
 		}
 	}
 	
@@ -83,9 +69,5 @@ public class DeckOfCards {
 			i++;
 		}
 		System.out.println();
-	}
-	
-	public int getSize() {
-		return deck.size();
 	}
 }

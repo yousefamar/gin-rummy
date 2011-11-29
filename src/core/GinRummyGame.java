@@ -11,12 +11,10 @@ public class GinRummyGame {
 	public ArrayList<Player> players = new ArrayList<Player>();
 	public Stack<Card> discardPile = new Stack<Card>();
 	public Player currentPlayer;
-	public boolean noHumans;
 	
 	public GinRummyGame(int humanNum, int computerNum) {
 		this.humanNum = humanNum;
 		this.computerNum = computerNum;
-		this.noHumans = computerNum==0;
 		for (int i=0;i<(humanNum+computerNum);i++) {
 			if(i<humanNum)
 				players.add(new HumanPlayer(this));
@@ -26,6 +24,15 @@ public class GinRummyGame {
 		
 		cardDeck.shuffle();
 		cardDeck.deal();
+		Player pla=players.get(0);
+		pla.hand.clear();
+		pla.hand.add(new Card(0));
+		pla.hand.add(new Card(5));
+		pla.hand.add(new Card(4));
+		pla.hand.add(new Card(3));
+		pla.hand.add(new Card(1));
+		pla.hand.add(new Card(7));
+		pla.hand.add(new Card(6));
 		discardPile.push(cardDeck.drawTopCard());
 
 		int i=0;
@@ -36,34 +43,13 @@ public class GinRummyGame {
 		}
 	}
 	
-	public void playMove(int clickedCard, int clickedStack) {
-		discardPile.push(clickedStack==0?currentPlayer.hand.set(clickedCard, discardPile.pop()):(currentPlayer.hand.set(clickedCard, cardDeck.drawTopCard())));
+	public void setNextPlayerAsCurrent() {
+		int nextPlayerIndex = currentPlayer.playerID+1;
+		nextPlayerIndex = nextPlayerIndex>(getNumOfPlayers()-1)?0:nextPlayerIndex;
+		currentPlayer = players.get(nextPlayerIndex);
 	}
 	
-	public void setCurentPlayerAsNext() {
-		//try {Thread.sleep(1000);} catch (InterruptedException e){}
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void onDeckEmpty() {
-		cardDeck.setDeck((LinkedList<Card>) discardPile.clone());
-		discardPile.clear();
-		cardDeck.shuffle();
-	}
-
 	public int getNumOfPlayers() {
 		return humanNum + computerNum;
-	}
-	
-	public int getNumOfComputers() {
-		return computerNum;
-	}
-
-	/**
-	 * Returns maximum hand size; -1 when all cards should be split evenly.
-	 * @return
-	 */
-	public int getMaxHandSize() {
-		return 7;
 	}
 }

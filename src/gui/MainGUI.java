@@ -145,7 +145,7 @@ public class MainGUI extends JPanel implements ActionListener {
 				JOptionPane.showMessageDialog(frame, "Playing Gin Rummy with 3 people is not yet supported.", "Error", JOptionPane.ERROR_MESSAGE);
 			else {
 				frame.getContentPane().removeAll();
-				frame.getContentPane().add(new GameCanvas(spriteMap, new GinRummyGame(humanNum, computerNum)));
+				frame.getContentPane().add(new GameCanvas(frame, spriteMap, new GinRummyGame(humanNum, computerNum)));
 				frame.validate();
 			}
 		}
