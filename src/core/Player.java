@@ -5,7 +5,7 @@ import java.util.*;
 public abstract class Player {
 
 	public int playerID;
-	public ArrayList<Card> hand = new ArrayList<Card>();
+	public LinkedList<Card> hand = new LinkedList<Card>();
 	protected boolean winningCards[] = {false,false,false,false,false,false,false};
 	protected GinRummyGame theGame;
 	
@@ -48,6 +48,19 @@ public abstract class Player {
 	 * @return
 	 */
 	public boolean hasWon() {
+		bubbleSortHandByFace();
+		
+		for(int i=0;i<hand.size();i++){
+			for(int j=i;j<hand.size();j++)
+			if(hand.get(i)==hand.get(j))
+				;
+		}
+		//find at least 3 cards with the same face
+		//copy rest to temp
+		//sort temp by suit
+		//check if suits are the same
+		//sort temp by face
+		//check increments
 		int valFreq[] = new int[52], suits[] = new int[52];
 		for(Card card : hand) {
 			int val = card.getValue();
@@ -74,5 +87,16 @@ public abstract class Player {
 				return false;
 		return true;
 	}
-	
+
+	private void bubbleSortHandByFace() {
+		int swapCount;
+		do{
+			swapCount = 0;
+			for (int i=0;i<hand.size()-1;i++)
+				if(hand.get(i).getValue()>hand.get(i+1).getValue()) {
+					hand.add(i, hand.remove(i+1));
+					swapCount++;
+				}
+		}while(swapCount>0);
+	}
 }

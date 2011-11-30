@@ -24,23 +24,25 @@ public class GinRummyGame {
 		
 		cardDeck.shuffle();
 		cardDeck.deal();
-		Player pla=players.get(0);
-		pla.hand.clear();
-		pla.hand.add(new Card(0));
-		pla.hand.add(new Card(5));
-		pla.hand.add(new Card(4));
-		pla.hand.add(new Card(3));
-		pla.hand.add(new Card(1));
-		pla.hand.add(new Card(7));
-		pla.hand.add(new Card(6));
+//		Player pla=players.get(0);
+//		pla.hand.clear();
+//		pla.hand.add(new Card(0));
+//		pla.hand.add(new Card(5));
+//		pla.hand.add(new Card(4));
+//		pla.hand.add(new Card(3));
+//		pla.hand.add(new Card(1));
+//		pla.hand.add(new Card(7));
+//		pla.hand.add(new Card(6));
 		discardPile.push(cardDeck.drawTopCard());
 
-		int i=0;
-		while((currentPlayer=players.get(i)).handleTurn()) {
-			i++;
-			if(i>=players.size())
-				i=0;
-		}
+		currentPlayer=players.get(0);
+		
+//		int i=0;
+//		while((currentPlayer=players.get(i)).handleTurn()) {
+//			i++;
+//			if(i>=players.size())
+//				i=0;
+//		}
 	}
 	
 	public void setNextPlayerAsCurrent() {
