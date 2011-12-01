@@ -19,6 +19,7 @@ public class GameCanvas extends Canvas implements MouseListener {
 	private int clickedCard=-1, clickedPile=-1;
 	private Font playerFont = new Font("Book Antiqua", Font.BOLD, 18);
 	private Color cardShader = new Color(255,238,0,127);
+	private Image offscreenBuffer;
 	
 	public GameCanvas(JFrame frame, SpriteMap spriteMap, GinRummyGame theGame) {
 		this.frame = frame;
@@ -30,8 +31,15 @@ public class GameCanvas extends Canvas implements MouseListener {
 	
 	@Override
 	public void paint(Graphics gfx) {
-		Graphics2D gfx2D = (Graphics2D) gfx;
-		drawScreen(gfx2D);
+		//Double buffering to prevent flicker.
+		if(offscreenBuffer==null)
+			offscreenBuffer = createImage(getWidth(), getHeight());
+		Graphics2D gfxBuffer = (Graphics2D) offscreenBuffer.getGraphics();
+		gfxBuffer.clearRect(0,0,getWidth(), getHeight());
+		drawScreen(gfxBuffer);
+		((Graphics2D) gfx).drawImage(offscreenBuffer,0,0,null);
+		gfxBuffer.dispose();
+		gfxBuffer=null;
 	 }
 
 	private void drawScreen(Graphics2D gfx2D) {
@@ -79,7 +87,7 @@ public class GameCanvas extends Canvas implements MouseListener {
 		gfx2D.setFont(playerFont);
 		gfx2D.drawString ("Player "+(theGame.currentPlayer.playerID+1), 190, 280);
 		if(theGame.currentPlayer instanceof ComputerPlayer)
-			gfx2D.drawString("Computer is thinking", 139, 260);
+			gfx2D.drawString("Click to finish Computer's turn", 90, 260);
 		else if(shouldHideCards)
 			gfx2D.drawString("Click to begin turn", 140, 260);
 		else if(clickedCard>=0&&clickedPile>=0)
