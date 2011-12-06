@@ -38,8 +38,8 @@ public class GameCanvas extends Canvas implements MouseListener {
 		gfxBuffer.clearRect(0,0,getWidth(), getHeight());
 		drawScreen(gfxBuffer);
 		((Graphics2D) gfx).drawImage(offscreenBuffer,0,0,null);
-		gfxBuffer.dispose();
-		gfxBuffer=null;
+//		gfxBuffer.dispose();
+//		gfxBuffer=null;
 	 }
 
 	private void drawScreen(Graphics2D gfx2D) {
@@ -100,7 +100,7 @@ public class GameCanvas extends Canvas implements MouseListener {
 	@Override
 	public void mousePressed(MouseEvent mouseEvent) {
 		if(theGame.currentPlayer instanceof ComputerPlayer) {
-			clickedCard = ((ComputerPlayer)theGame.currentPlayer).getWeakestCard();
+			clickedCard = ((ComputerPlayer)theGame.currentPlayer).getWeakestCardIndex();
 			clickedPile = ((ComputerPlayer)theGame.currentPlayer).getPileSelection();
 			repaint();
 		}

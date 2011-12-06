@@ -1,7 +1,6 @@
 package core;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.Stack;
 
 public class GinRummyGame {
@@ -24,15 +23,18 @@ public class GinRummyGame {
 		
 		cardDeck.shuffle();
 		cardDeck.deal();
+		
+		//Simulate win.
 //		Player pla=players.get(0);
 //		pla.hand.clear();
 //		pla.hand.add(new Card(0));
-//		pla.hand.add(new Card(5));
-//		pla.hand.add(new Card(4));
-//		pla.hand.add(new Card(3));
-//		pla.hand.add(new Card(1));
-//		pla.hand.add(new Card(7));
-//		pla.hand.add(new Card(6));
+//		pla.hand.add(new Card(12+13+13+13));
+//		pla.hand.add(new Card(12+13+13));
+//		pla.hand.add(new Card(13));
+//		pla.hand.add(new Card(12));
+//		pla.hand.add(new Card(12+13));
+//		pla.hand.add(new Card(13+13));
+		
 		discardPile.push(cardDeck.drawTopCard());
 
 		currentPlayer=players.get(0);

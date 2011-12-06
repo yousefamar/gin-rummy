@@ -5,26 +5,21 @@ import java.util.*;
 public abstract class Player {
 
 	public int playerID;
-	public LinkedList<Card> hand = new LinkedList<Card>();
-	protected boolean winningCards[] = {false,false,false,false,false,false,false};
 	protected GinRummyGame theGame;
+	public LinkedList<Card> hand = new LinkedList<Card>();
+	protected LinkedList<Card> handCopy = new LinkedList<Card>();
 	
 	public Player(GinRummyGame game) {
 		this.theGame = game;
 		playerID = game.players.size();
 	}
 	
-	/**
-	 * Runs on a players turn. Should return true to flag a win.
-	 * @return
-	 */
-	public abstract boolean handleTurn();
+	//public abstract boolean handleTurn();
 
 	public void addCardToHand(Card card) {
 		hand.add(card);
 	}
 
-	@SuppressWarnings("unchecked")
 	public void playMove(int clickedCard, int clickedPile) {
 		if(clickedCard>6)
 			theGame.discardPile.push(theGame.cardDeck.drawTopCard());
@@ -44,56 +39,65 @@ public abstract class Player {
 	}
 	
 	/**
-	 * Checks if the player has a winning hand.
-	 * @return
+	 * @return Returns true if a player has a winning hand.
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean hasWon() {
-		bubbleSortHandByFace();
-		
-		for(int i=0;i<hand.size();i++){
-			for(int j=i;j<hand.size();j++)
-			if(hand.get(i)==hand.get(j))
-				;
+		handCopy = (LinkedList<Card>) hand.clone();
+		bubbleSortHandByFace(handCopy);
+		LinkedList<Card> winning = new LinkedList<Card>();
+		//Pull out groups of matching faces.
+		//Faces take priority over runs though in reality it's more likely to win with runs.
+		for(int i=0;i<handCopy.size()-2;i++){
+			if(handCopy.get(i).getValue()==handCopy.get(i+1).getValue()&&handCopy.get(i).getValue()==handCopy.get(i+2).getValue()) {
+				if(i<handCopy.size()-3&&handCopy.get(i).getValue()==handCopy.get(i+3).getValue())
+					winning.add(handCopy.remove(i+3));
+				winning.add(handCopy.remove(i));
+				winning.add(handCopy.remove(i));
+				winning.add(handCopy.remove(i));
+				i=-1;
+			}
 		}
-		//find at least 3 cards with the same face
-		//copy rest to temp
-		//sort temp by suit
-		//check if suits are the same
-		//sort temp by face
-		//check increments
-		int valFreq[] = new int[52], suits[] = new int[52];
-		for(Card card : hand) {
-			int val = card.getValue();
-			valFreq[val]++;
-			suits[val] = card.getSuit()+1;
+		bubbleSortHandBySuit(handCopy); //NB: Hand is already sorted by value so values in suits will be sequential.
+		//Pull out runs.
+		for(int i=0;i<handCopy.size()-2;i++){
+			if(handCopy.get(i).getSuit()==handCopy.get(i+1).getSuit()&&handCopy.get(i).getSuit()==handCopy.get(i+2).getSuit()
+				&&handCopy.get(i).getValue()==handCopy.get(i+1).getValue()-1&&handCopy.get(i).getValue()==handCopy.get(i+2).getValue()-2) {
+				boolean fourthCardFlag = false;
+				if(i<handCopy.size()-3&&handCopy.get(i).getSuit()==handCopy.get(i+3).getSuit()
+					&&handCopy.get(i).getValue()==handCopy.get(i+3).getValue()-3)
+					fourthCardFlag=true;
+				winning.add(handCopy.remove(i));
+				winning.add(handCopy.remove(i));
+				winning.add(handCopy.remove(i));
+				if(fourthCardFlag)
+					winning.add(handCopy.remove(i));
+				i=-1;
+			}
 		}
-		for(int i=0;i<valFreq.length;i++)
-			if(valFreq[i]>2)
-				for(int j=0;j<hand.size();j++)
-					if(hand.get(j).getValue()==i)
-						winningCards[j]=true;
-		for(int i=0;i<suits.length-1;i++)
-			if(suits[i]!=0&&suits[i]==suits[i+1])
-				for(int j=0;j<hand.size();j++)
-					if(hand.get(j).getValue()==i||hand.get(j).getValue()==i+1)
-						winningCards[j]=true;
-//		int maxFreq = 0;
-//		for (int freq : valFreq)
-//			if(freq>maxFreq)
-//				maxFreq=freq;
-		
-		for(boolean winning : winningCards)
-			if(!winning)
-				return false;
-		return true;
+		if(winning.size()>6)
+			return true;
+		return false;
 	}
 
-	private void bubbleSortHandByFace() {
+	protected void bubbleSortHandByFace(LinkedList<Card> hand) {
 		int swapCount;
 		do{
 			swapCount = 0;
 			for (int i=0;i<hand.size()-1;i++)
 				if(hand.get(i).getValue()>hand.get(i+1).getValue()) {
+					hand.add(i, hand.remove(i+1));
+					swapCount++;
+				}
+		}while(swapCount>0);
+	}
+	
+	protected void bubbleSortHandBySuit(LinkedList<Card> hand) {
+		int swapCount;
+		do{
+			swapCount = 0;
+			for (int i=0;i<hand.size()-1;i++)
+				if(hand.get(i).getSuit()>hand.get(i+1).getSuit()) {
 					hand.add(i, hand.remove(i+1));
 					swapCount++;
 				}
