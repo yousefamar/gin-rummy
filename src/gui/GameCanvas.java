@@ -43,8 +43,13 @@ public class GameCanvas extends Canvas implements MouseListener {
 	 }
 
 	private void drawScreen(Graphics2D gfx2D) {
+		if(theGame.currentPlayer instanceof ComputerPlayer) {
+			clickedPile = ((ComputerPlayer)theGame.currentPlayer).getPileSelection();
+			clickedCard = ((ComputerPlayer)theGame.currentPlayer).getWeakestCardIndex(clickedPile==1);
+		}
+		
 		for (int i=0;i<7;i++) {
-			if(shouldHideCards) {
+			if(shouldHideCards&&!theGame.areAllPlayersComputer()) {
 				gfx2D.setColor(Color.DARK_GRAY);
 				gfx2D.fillRect((i*50)+50, 290, 40, 60);
 				gfx2D.setColor(Color.WHITE);
@@ -92,18 +97,11 @@ public class GameCanvas extends Canvas implements MouseListener {
 			gfx2D.drawString("Click to begin turn", 140, 260);
 		else if(clickedCard>=0&&clickedPile>=0)
 			gfx2D.drawString("Click to finish turn", 139, 260);
-//		if(theGame.currentPlayer instanceof ComputerPlayer)
-//			clickedPile=clickedCard=-1;
 	}
 
 	//I use mousePressed instead of mouseClicked because mouseClicked ignores accidental drags.
 	@Override
 	public void mousePressed(MouseEvent mouseEvent) {
-		if(theGame.currentPlayer instanceof ComputerPlayer) {
-			clickedCard = ((ComputerPlayer)theGame.currentPlayer).getWeakestCardIndex();
-			clickedPile = ((ComputerPlayer)theGame.currentPlayer).getPileSelection();
-			repaint();
-		}
 		if(shouldHideCards&&!(theGame.currentPlayer instanceof ComputerPlayer)) {
 			shouldHideCards=false;
 			clickedPile=clickedCard=-1;

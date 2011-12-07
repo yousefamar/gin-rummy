@@ -56,4 +56,8 @@ public class GinRummyGame {
 	public int getNumOfPlayers() {
 		return humanNum + computerNum;
 	}
+	
+	public boolean areAllPlayersComputer() {
+		return humanNum==0;
+	}
 }
