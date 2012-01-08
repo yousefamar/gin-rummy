@@ -14,19 +14,28 @@ public class MainGUI extends JPanel implements ActionListener {
 	private SpriteMap spriteMap = new SpriteMap();
 	private JPanel humanImagePanel, computerImagePanel;
 	private JButton playButton, humanPlus, humanMinus, computerPlus, computerMinus;
-	private int humanNum=1, computerNum=3;
+	private int humanCount=1, computerCount=3;
 	
+	/**
+	 * The class for the main menu GUI.
+	 * No double buffering due to few and small elements within.
+	 * @param frame
+	 */
 	public MainGUI(JFrame frame){
 		super(new GridBagLayout());
 		this.frame = frame;
+		
+		/* Initialise all GridBagConstraint objects in a single array to save space */
 		GridBagConstraints cons[] = new GridBagConstraints[7];
 		for (int i=0;i<cons.length;i++)
 			cons[i] = new GridBagConstraints();
 		
+		/* Set GBC values fields */
 		cons[0].gridx = 0;
 		cons[0].gridy = 0;
 		cons[0].insets = new Insets(0,0,80,0);
 		this.add(new JLabel(new ImageIcon(getClass().getResource("textures/logo.png"))),cons[0]);
+		
 		addButtons(cons);
 	}
 
@@ -71,7 +80,7 @@ public class MainGUI extends JPanel implements ActionListener {
         cons[4].ipady = 20;
         this.add(playerImagePanel,cons[4]);
         
-        //To make the buttons a reasonable size, I put them in other panels that use FlowLayout.
+        /*To make the buttons a reasonable size, put them in other panels that use FlowLayout.*/
         playerButtonPanel.add(new JPanel().add(humanMinus));
         playerButtonPanel.add(new JLabel(" Humans "));
         playerButtonPanel.add(new JPanel().add(humanPlus));
@@ -93,59 +102,57 @@ public class MainGUI extends JPanel implements ActionListener {
 	}
 	
 	@Override
-	public void repaint() {
-		super.repaint();
-	}
-	
-	@Override
 	public void actionPerformed(ActionEvent e) {
+		/* Sets the player number fields and redraws the GUI accordingly.
+		 * Also manages the number of humans vs. computer players to avoid
+		 * an imbalanced number of either. (e.g. 0 for both or 3 total)*/
 		Object source = e.getSource();
 		if (source == humanMinus){
-			if(humanNum<1)
+			if(humanCount<1)
 				return;
-			humanNum--;
-			humanImagePanel.remove(humanNum);
-			if(humanNum+computerNum<2) {
-				computerNum++; 
+			humanCount--;
+			humanImagePanel.remove(humanCount);
+			if(humanCount+computerCount<2) {
+				computerCount++; 
 				computerImagePanel.add(new JLabel(new ImageIcon(spriteMap.getSprite(SpriteType.COMPUTER))));
 			}
 			validate();
 		} else if (source == humanPlus){
-			if(humanNum>3)
+			if(humanCount>3)
 				return;
-			humanNum++;
+			humanCount++;
 			humanImagePanel.add(new JLabel(new ImageIcon(spriteMap.getSprite(SpriteType.PLAYER))));
-			if(humanNum+computerNum>4) {
-				computerNum--;
-				computerImagePanel.remove(computerNum);
+			if(humanCount+computerCount>4) {
+				computerCount--;
+				computerImagePanel.remove(computerCount);
 			}
 			validate();
 		} else if (source == computerMinus){
-			if(computerNum<1)
+			if(computerCount<1)
 				return;
-			computerNum--;
-			computerImagePanel.remove(computerNum);
-			if(humanNum+computerNum<2) {
-				humanNum++;
+			computerCount--;
+			computerImagePanel.remove(computerCount);
+			if(humanCount+computerCount<2) {
+				humanCount++;
 				humanImagePanel.add(new JLabel(new ImageIcon(spriteMap.getSprite(SpriteType.PLAYER))));
 			}
 			validate();
 		} else if (source == computerPlus){
-			if(computerNum>3)
+			if(computerCount>3)
 				return;
-			computerNum++;
+			computerCount++;
 			computerImagePanel.add(new JLabel(new ImageIcon(spriteMap.getSprite(SpriteType.COMPUTER))));
-			if(humanNum+computerNum>4) {
-				humanNum--;
-				humanImagePanel.remove(humanNum);
+			if(humanCount+computerCount>4) {
+				humanCount--;
+				humanImagePanel.remove(humanCount);
 			}
 			validate();
 		} else if (source == playButton){
-			if(humanNum+computerNum==3)
+			if(humanCount+computerCount==3)
 				JOptionPane.showMessageDialog(frame, "Playing Gin Rummy with 3 people is not yet supported.", "Error", JOptionPane.ERROR_MESSAGE);
 			else {
 				frame.getContentPane().removeAll();
-				frame.getContentPane().add(new GameCanvas(frame, spriteMap, new GinRummyGame(humanNum, computerNum)));
+				frame.getContentPane().add(new GameCanvas(frame, spriteMap, new GinRummyGame(humanCount, computerCount)));
 				frame.validate();
 			}
 		}

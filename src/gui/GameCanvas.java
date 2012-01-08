@@ -3,10 +3,7 @@ package gui;
 import gui.SpriteMap.SpriteType;
 import java.awt.*;
 import java.awt.event.*;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
+import javax.swing.*;
 import core.*;
 
 public class GameCanvas extends Canvas implements MouseListener {
@@ -31,7 +28,7 @@ public class GameCanvas extends Canvas implements MouseListener {
 	
 	@Override
 	public void paint(Graphics gfx) {
-		//Double buffering to prevent flicker.
+		/* Double buffer to reduce flickering */
 		if(offscreenBuffer==null)
 			offscreenBuffer = createImage(getWidth(), getHeight());
 		Graphics2D gfxBuffer = (Graphics2D) offscreenBuffer.getGraphics();
@@ -44,10 +41,12 @@ public class GameCanvas extends Canvas implements MouseListener {
 
 	private void drawScreen(Graphics2D gfx2D) {
 		if(theGame.currentPlayer instanceof ComputerPlayer) {
+			/* Get card selection from AI if computer player. */
 			clickedPile = ((ComputerPlayer)theGame.currentPlayer).getPileSelection();
-			clickedCard = ((ComputerPlayer)theGame.currentPlayer).getWeakestCardIndex(clickedPile==1);
+			clickedCard = ((ComputerPlayer)theGame.currentPlayer).getWeakestCardIndex((shouldRevealDeck=clickedPile==1));
 		}
 		
+		/* Draw hand and opponent cards */
 		for (int i=0;i<7;i++) {
 			if(shouldHideCards&&!theGame.areAllPlayersComputer()) {
 				gfx2D.setColor(Color.DARK_GRAY);
@@ -68,6 +67,8 @@ public class GameCanvas extends Canvas implements MouseListener {
 				gfx2D.drawImage(spriteMap.getSprite(SpriteType.CARDBACKROT), null, 392-20, (i*30)+60);
 			}
 		}
+		
+		/* Draw piles */
 		gfx2D.setColor(clickedPile==0?Color.YELLOW:Color.WHITE);
 		gfx2D.fillRect(150, 130, 50, 75);
 		gfx2D.setColor(Color.DARK_GRAY);
@@ -88,6 +89,7 @@ public class GameCanvas extends Canvas implements MouseListener {
 			gfx2D.fillRect(240, 130, 50, 75);
 		}
 		
+		/* Draw info messages */
 		gfx2D.setColor(Color.BLUE);
 		gfx2D.setFont(playerFont);
 		gfx2D.drawString ("Player "+(theGame.currentPlayer.playerID+1), 190, 280);
@@ -99,7 +101,7 @@ public class GameCanvas extends Canvas implements MouseListener {
 			gfx2D.drawString("Click to finish turn", 139, 260);
 	}
 
-	//I use mousePressed instead of mouseClicked because mouseClicked ignores accidental drags.
+	//mousePressed instead of mouseClicked because mouseClicked ignores accidental drags.
 	@Override
 	public void mousePressed(MouseEvent mouseEvent) {
 		if(shouldHideCards&&!(theGame.currentPlayer instanceof ComputerPlayer)) {

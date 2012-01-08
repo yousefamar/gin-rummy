@@ -12,6 +12,10 @@ public class SpriteMap {
 	private BufferedImage spriteSheet;
 	private ArrayList<BufferedImage> sprites = new ArrayList<BufferedImage>();
 	
+	/**
+	 * This class is based on an older project I worked on
+	 * that including a large number of sprites.
+	 */
 	public SpriteMap() {
 		try{spriteSheet = ImageIO.read(getClass().getResource("textures/spritemap.png"));}
 		catch(IOException e){e.printStackTrace();}
@@ -23,6 +27,10 @@ public class SpriteMap {
 		addSprite(SpriteType.CARDBACKLARGE);
 	}
 	
+	/**
+	 * Adds a sprite to the sprite map.
+	 * @param sprite
+	 */
 	private void addSprite(SpriteType sprite) {
 		if(sprite==SpriteType.CARDBACKROT){
 			BufferedImage rotatedImage = spriteSheet.getSubimage(sprite.texX, sprite.texY, sprite.sizeX, sprite.sizeY);
@@ -55,6 +63,14 @@ public class SpriteMap {
 
 		public int id, texX, texY, sizeX, sizeY;
 		
+		/**
+		 * Stores all the image data for a sprite.
+		 * @param id
+		 * @param texX
+		 * @param texY
+		 * @param sizeX
+		 * @param sizeY
+		 */
 		private SpriteType(int id, int texX, int texY, int sizeX, int sizeY){
 			this.id=id;
 			this.texX=texX;

@@ -8,12 +8,14 @@ public abstract class Player {
 	protected GinRummyGame theGame;
 	public LinkedList<Card> hand = new LinkedList<Card>();
 	protected LinkedList<Card> handCopy = new LinkedList<Card>();
+	//^Used for AI and hasWon() check. Takes up more space but saves time doesn't looks nicer on the GUI.  
 	
 	public Player(GinRummyGame game) {
 		this.theGame = game;
 		playerID = game.players.size();
 	}
 	
+	//Old extendible console turn handle method.
 	//public abstract boolean handleTurn();
 
 	public void addCardToHand(Card card) {
@@ -46,7 +48,7 @@ public abstract class Player {
 		handCopy = (LinkedList<Card>) hand.clone();
 		bubbleSortHandByFace(handCopy);
 		LinkedList<Card> winning = new LinkedList<Card>();
-		//Pull out groups of matching faces.
+		/* Pull out groups of matching faces */
 		//Faces take priority over runs though in reality it's more likely to win with runs.
 		for(int i=0;i<handCopy.size()-2;i++){
 			if(handCopy.get(i).getValue()==handCopy.get(i+1).getValue()&&handCopy.get(i).getValue()==handCopy.get(i+2).getValue()) {
@@ -59,7 +61,7 @@ public abstract class Player {
 			}
 		}
 		bubbleSortHandBySuit(handCopy); //NB: Hand is already sorted by value so values in suits will be sequential.
-		//Pull out runs.
+		/* Pull out runs */
 		for(int i=0;i<handCopy.size()-2;i++){
 			if(handCopy.get(i).getSuit()==handCopy.get(i+1).getSuit()&&handCopy.get(i).getSuit()==handCopy.get(i+2).getSuit()
 				&&handCopy.get(i).getValue()==handCopy.get(i+1).getValue()-1&&handCopy.get(i).getValue()==handCopy.get(i+2).getValue()-2) {

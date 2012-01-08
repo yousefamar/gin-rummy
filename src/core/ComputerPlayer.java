@@ -1,7 +1,6 @@
 package core;
 
-import java.util.LinkedList;
-import java.util.Random;
+import java.util.*;
 
 public class ComputerPlayer extends Player {
 
@@ -15,7 +14,7 @@ public class ComputerPlayer extends Player {
 	public int getWeakestCardIndex(boolean isDeckSelected) {
 		handCopy = (LinkedList<Card>) hand.clone();
 
-		//Pull out groups of matching faces.
+		/* Pull out groups of matching faces */
 		//Faces take priority over runs though in reality it's more likely to win with runs.
 		bubbleSortHandByFace(handCopy);
 		for(int i=0;i<handCopy.size()-2;i++)
@@ -28,7 +27,7 @@ public class ComputerPlayer extends Player {
 				i=-1;
 			}
 
-		//Pull out runs.
+		/* Pull out runs */
 		bubbleSortHandBySuit(handCopy); //NB: Hand is already sorted by value so values in suits will be sequential.
 		for(int i=0;i<handCopy.size()-2;i++)
 			if(handCopy.get(i).getSuit()==handCopy.get(i+1).getSuit()&&handCopy.get(i).getSuit()==handCopy.get(i+2).getSuit()
@@ -49,7 +48,7 @@ public class ComputerPlayer extends Player {
 		if(handCopy.size()>0)
 			weakestIndexSoFar = hand.indexOf(handCopy.get(rand.nextInt(handCopy.size())));
 		
-		//Pull out non-unique cards.
+		/* Pull out non-unique cards */
 		bubbleSortHandByFace(handCopy);
 		for(int i=0;i<handCopy.size()-1;i++)
 			if(handCopy.get(i).getValue()==handCopy.get(i+1).getValue()) {
@@ -58,7 +57,7 @@ public class ComputerPlayer extends Player {
 				i=-1;
 			}
 		
-		//Pull out potential runs.
+		/* Pull out potential runs. */
 		bubbleSortHandBySuit(handCopy); //NB: Hand is already sorted by value so values in suits will be sequential.
 		for(int i=0;i<handCopy.size()-1;i++)
 			if(handCopy.get(i).getSuit()==handCopy.get(i+1).getSuit()&&handCopy.get(i).getValue()==handCopy.get(i+1).getValue()-1) {
@@ -86,6 +85,7 @@ public class ComputerPlayer extends Player {
 			if(handCard.getSuit()==cardSuit&&(handCard.getValue()==cardValue+1||handCard.getValue()==cardValue-1))
 				return true;
 		}
-		return rand.nextBoolean();
+		return false;
+		//return rand.nextBoolean();
 	}
 }

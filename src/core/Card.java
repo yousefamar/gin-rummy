@@ -1,11 +1,10 @@
 package core;
 
-import java.awt.Color;
-import java.awt.Graphics;
-
 public class Card {
 	
 	private int index;
+	// If I had the freedom to, I'd add more fields to this class that affect
+	// the way a particular card is rendered in the game instead of doing it in the GUI classes.
 	
 	/**
 	 * Indices range from 0 to 51.

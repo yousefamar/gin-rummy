@@ -8,7 +8,7 @@ public class DeckOfCards {
 	public LinkedList<Card> deck = new LinkedList<Card>();
 	
 	/**
-	 * The default suit order is Spades, Hearts, Clubs, Diamonds. 
+	 * Deck of Cards class; The default suit order is Spades, Hearts, Clubs, Diamonds. 
 	 * @param game
 	 */
 	public DeckOfCards(GinRummyGame game){
@@ -17,6 +17,9 @@ public class DeckOfCards {
 			deck.add(new Card(i));
 	}
 	
+	/**
+	 * Cuts the deck at a random location.
+	 */
 	public void cut() {
 		int cutLoc = rand.nextInt(deck.size());
 		LinkedList<Card> tempDeck = new LinkedList<Card>();
@@ -43,6 +46,9 @@ public class DeckOfCards {
 		}
 	}
 	
+	/**
+	 * Deals cards to players in a way that can be modified for custom hand sizes.
+	 */
 	public void deal() {
 		int playerNum=0;
 		for (int i=0;i<7*theGame.getNumOfPlayers();i++) {
@@ -60,6 +66,8 @@ public class DeckOfCards {
 		return deck.removeFirst();
 	}
 	
+	/*
+	//Old console printDeck method.
 	public void printDeck() {
 		int i=0;
 		for (Card card:deck) {
@@ -70,4 +78,5 @@ public class DeckOfCards {
 		}
 		System.out.println();
 	}
+	*/
 }

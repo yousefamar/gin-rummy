@@ -20,6 +20,7 @@ public class Main {
 		frame.setVisible(true);
 
 		/*
+		//Original console code.
 		
 		Console console = System.console();
 		int players = 0, humans = -1;

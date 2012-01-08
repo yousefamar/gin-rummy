@@ -5,17 +5,19 @@ import java.util.Stack;
 
 public class GinRummyGame {
 	
-	private int humanNum, computerNum;
+	private int humanCount, computerCount;
 	public DeckOfCards cardDeck = new DeckOfCards(this);
 	public ArrayList<Player> players = new ArrayList<Player>();
 	public Stack<Card> discardPile = new Stack<Card>();
 	public Player currentPlayer;
 	
-	public GinRummyGame(int humanNum, int computerNum) {
-		this.humanNum = humanNum;
-		this.computerNum = computerNum;
-		for (int i=0;i<(humanNum+computerNum);i++) {
-			if(i<humanNum)
+	public GinRummyGame(int humanCount, int computerCount) {
+		this.humanCount = humanCount;
+		this.computerCount = computerCount;
+		
+		/* Instantiate players */
+		for (int i=0;i<(humanCount+computerCount);i++) {
+			if(i<humanCount)
 				players.add(new HumanPlayer(this));
 			else
 				players.add(new ComputerPlayer(this));
@@ -24,8 +26,8 @@ public class GinRummyGame {
 		cardDeck.shuffle();
 		cardDeck.deal();
 		
-		//Simulate win.
-//		Player pla=players.get(0);
+		/* Simulate win using card IDs */
+//		Player pla = players.get(0);
 //		pla.hand.clear();
 //		pla.hand.add(new Card(0));
 //		pla.hand.add(new Card(12+13+13+13));
@@ -39,6 +41,7 @@ public class GinRummyGame {
 
 		currentPlayer=players.get(0);
 		
+		//Original console turn handle code.
 //		int i=0;
 //		while((currentPlayer=players.get(i)).handleTurn()) {
 //			i++;
@@ -54,10 +57,10 @@ public class GinRummyGame {
 	}
 	
 	public int getNumOfPlayers() {
-		return humanNum + computerNum;
+		return humanCount + computerCount;
 	}
 	
 	public boolean areAllPlayersComputer() {
-		return humanNum==0;
+		return humanCount==0;
 	}
 }
